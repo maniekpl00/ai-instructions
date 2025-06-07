@@ -1,0 +1,91 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Web Accessibility
+
+## WCAG Compliance
+WCAG Level A and Level AA standards are a minimum requirement for all components and interfaces. While WCAG Level AAA compliance is not mandatory, strive to implement AAA requirements where feasible to provide the best possible accessibility experience.
+
+## Key Guidelines
+- **Supported Browsers**: Chrome, Firefox, Safari
+- **Supported Operating System**: Windows, IOS, MacOS
+- **Component Development**
+- - Build all components in accordance with WCAG success criteria and accessibility best practices
+- - Use native HTML tag instead roles if possible
+- - Avoid using deprecated and especially not widely supported `aria-*`
+- **Color and Contrast**: Ensure sufficient color contrast ratios
+- - 1.4.3 Contrast (Minimum)
+- - 1.4.11 Non-text Contrast
+- - 2.4.13 Focus Appearance - is required for focus ring
+- **Page Structure**: 
+- - Implement proper landmarks (header, main, footer, nav, etc.)
+- - Use correct heading hierarchy (h1-h6), h1 should reflect the purpose and share same context like page title
+- - Include descriptive page titles that reflect the content and purpose
+- - Include skip links to landmark main or to main content
+- - On SPA provide mechanism returning focus to element containing page title to reset page focus and to let user use skip links when changing route
+- - Include language of page and language of parts if needed
+- **Keyboard Accessibility**: Ensure all interactive elements are keyboard accessible with visible focus states
+- - 2.1.1 Keyboard
+- **Forms and Inputs**: Implement proper labels, error handling, and validation techniques. The error should 
+- - 3.3.1 Error Identification - gives user a hint where errors occur
+- - 3.3.2 Label or Instructions - gives user a hint how to fill the form
+- - 3.3.3 Error Suggestion - gives user a hint how to fix an error
+- **Responsive Design**: Ensure content remains accessible across different screen sizes and when zoomed
+- - 1.4.4 Resize Text
+- **Interactive Elements**: Provide sufficient time for users to read and interact with content
+- **Focus Traps**: Ensure all overlay elements have proper focus trap and mechanism of escaping it with keyboard
+- - 2.1.2 No Keyboard Trap
+- **Progressive Enhancing**: For static pages ensure content remains accessible if JavaScript is not fully loaded 
+- **Documentation**: Document accessibility features and known limitations
+
+## Approaches
+
+### Landmarks: nav, section, form
+- It must include aria-label or aria-labelledby
+- The label must be unique
+
+### List
+- Use `ol` for ordered list and `ul` for unordered list.
+
+### Button
+- Avoid using disabled state on button.
+- Loading state should clearly show loading state, avoid using `disabled`, exclude e.g. onClick for busy button.  
+- Changing state to loading state and vice versa should be clearly informed through live region to let user knows about busy button
+
+### Tooltip
+- Avoid using `title`, it causes a11y issue
+- Avoid using tooltip, use `Toggletip` which display popover on click
+
+### Ellipsis
+- Avoid using ellipsis
+
+### Image
+- Use aria-hidden on decorative images
+- Apply label on non-decorative images only when it reflects the purpose
+
+### Form errors
+- Provide errors summary on the top of form after submittion
+- Use aria-describedby and aria-invalid when error occurs
+- Errors must be descriptive and must exactly gives users insight how to fix error except situation where giving hints would expose system purpose like for example: quizes or exams 
+```
+// GOOD
+Zip code must be 5 digits
+
+// BAD
+// Error doesn't give suggestions how to fix
+Zip code is invalid
+
+// Error doesn't tell about which field 
+This field is required
+```
+
+### Modal
+- Modals and drawers must be keyboard accessible, focus trap must be looped here
+- Role `dialog` and `aria-modal` is important for modal components
+- Avoid using non-modal approach cause except when providing keyboard mechanism of jumping to non-modal and escaping it without losing context
+
+### Skip links & Page Title
+- Implement Page Title Announcer to reset focus to the top of page on SPA, provide an invisible element
+- Implement mechanism of skip link to bypass repeatable content 

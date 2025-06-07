@@ -1,0 +1,103 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Feature Sliced Design
+
+Refer to Feature Sliced Design official documentation for best practices - https://feature-sliced.github.io/documentation/docs/get-started/overview.
+
+## Layer Structure
+
+Code must be organized into the following layers:
+
+1. `app` - everything that makes the app run — routing, entrypoints, global styles, providers.
+2. `pages` - full pages or large parts of a page in nested routing.
+3. `widgets` — large self-contained chunks of functionality or UI, usually delivering an entire use case.
+4. `features` — reused implementations of entire product features, i.e. actions that bring business value to the user.
+5. `entities` — business entities that the project works with, like user or product.
+6. `shared` — reusable functionality, especially when it's detached from the specifics of the project/business, though not necessarily.
+
+Layers App and Shared, unlike other layers, do not have slices and are divided into segments directly.
+
+However, all other layers — Entities, Features, Widgets, and Pages, retain the structure in which you must first create slices, inside which you create the segments.
+
+## Import Rules
+
+- `shared` → can be imported by all layers
+- `entities` → can import from `shared`
+- `features` → can import from `entities`, `shared`
+- `widgets` → can import from `features`, `entities`, `shared`
+- `pages` → can import from all layers
+- `app` → can import from all layers
+
+## Folder Conventions
+
+Each layer must contain only specific subfolders depending on context:
+
+- Use `ui/` for UI components
+- Use `model/` for state or logic (e.g., store, effects)
+- Use `lib/` for helpers and local utilities
+- Use `api/` for API-related logic
+- Optional: `config/`, `types/`, `assets/`
+
+## Naming Conventions
+
+- File names must be `kebab-case`
+- Component names must use `PascalCase`
+- Hooks must use `useXYZ` format and live in `model/` or `lib/`
+
+## Overview
+
+Here is a simple project that implements FSD:
+
+```
+app/
+pages/
+shared/
+```
+
+These top-level folders are called layers:
+
+```
+app/
+├── routes/
+├── analytics/
+pages
+├── home/
+├── article-reader/
+│   └── ui/
+│   └── api/
+├── settings/
+shared/
+├── ui/
+├── api/
+```
+
+Folders inside `pages` are called slices. They divide the layer by domain (in this case, by pages).
+
+Folders inside `app`, `shared`, and `pages/article-reader` are called segments, and they divide slices (or layers) by technical purpose, i.e. what the code is for.
+
+## Example Feature Folder Structure
+
+```
+features/user-auth/
+├── model/
+│   └── use-login.ts
+├── ui/
+│   └── LoginForm.tsx
+├── lib/
+│   └── validate-credentials.ts
+```
+
+## Do's
+
+- Place reusable buttons in `shared/ui`
+- Place entity logic in `entities/model`
+- Compose UI in `widgets` using lower-level features/entities
+
+## Don't
+
+- Don't import from `widgets` inside `features`
+- Don't use relative paths like `../../shared` — prefer absolute imports (e.g. `@/shared/ui/Button`)
+- Don't put business logic inside `pages/`

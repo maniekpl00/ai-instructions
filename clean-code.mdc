@@ -1,0 +1,262 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Clean Code Guidelines
+
+## Constants Over Magic Numbers
+
+- Replace hard-coded values with named constants
+- Use descriptive constant names that explain the value's purpose
+- Keep constants at the top of the file or in a dedicated constants file
+
+## Smart Comments
+
+- Don't comment on what the code does - make the code self-documenting
+- Use comments to explain why something is done a certain way
+- Document APIs, complex algorithms, and non-obvious side effects
+
+## Single Responsibility
+
+- Each function should do exactly one thing
+- Functions should be small and focused
+- If a function needs a comment to explain what it does, it should be split
+
+## DRY (Don't Repeat Yourself)
+
+- Extract repeated code into reusable functions
+- Share common logic through proper abstraction
+- Maintain single sources of truth
+
+## Clean Structure
+
+- Keep related code together
+- Organize code in a logical hierarchy
+- Use consistent file and folder naming conventions
+
+## Encapsulation
+
+- Hide implementation details
+- Expose clear interfaces
+- Move nested conditionals into well-named functions
+
+## Code Quality Maintenance
+
+- Refactor continuously
+- Fix technical debt early
+- Leave code cleaner than you found it
+
+## Naming Conventions
+
+- Variables, functions, and classes should reveal their purpose in English
+- Names should explain why something exists and how it's used
+- Avoid abbreviations unless they're universally understood
+- Use camelCase for variables and functions
+- Use UPPER_CASE for constants
+- Avoid generic function names like `handleClick` when more specific names like `handleButtonClick` already exist. Function names should clearly describe what they do. Examples:
+
+```ts
+// GOOD
+const handleSaveButtonClick = () => {
+  /* ... */
+};
+const handleCancelButtonClick = () => {
+  /* ... */
+};
+const handleUserMenuToggle = () => {
+  /* ... */
+};
+const onSaveButtonClick = () => {
+  /* ... */
+};
+const onCancelButtonClick = () => {
+  /* ... */
+};
+const onUserMenuToggle = () => {
+  /* ... */
+};
+
+// BAD
+// Too generic
+const handleClick = () => {
+  /* ... */
+};
+// Extremely generic
+const handle = () => {
+  /* ... */
+};
+// Too generic & do not follow other function names
+const clickButton = () => {
+  /* ... */
+};
+```
+
+- Boolean variables should be prefixed with is/has/should (e.g. isLoading, shouldUpdate, hasError), except for:
+- - native boolean props like disabled, readonly, etc.
+- - components located in 'app/components/ui/' directory
+- Functions that return boolean values should be prefixed with 'check' followed by is/has/should. Examples:
+- - checkIsValid() -> CORRECT (returns boolean)
+- - checkHasPermission() -> CORRECT (returns boolean)
+- - checkShouldUpdate() -> CORRECT (returns boolean)
+- - isValid() -> WRONG (missing 'check' prefix)
+- - hasPermission() -> WRONG (missing 'check' prefix)
+- Non-boolean variables and functions should not have is/has/should prefixes at all. Examples:
+- - userStatus -> CORRECT (instead of isUserStatus)
+- - processData -> CORRECT (instead of isProcessData)
+- - getUser -> CORRECT (instead of isGetUser)
+- Maintain consistent naming patterns across the codebase. Avoid mixing different naming variations for the same concept:
+
+```ts
+// GOOD - consistent naming
+const isEdited = true;
+const isReadOnly = true;
+
+// BAD - inconsistent naming
+const isEdited = true;
+const isEdit = false;
+const isReadonly = true;
+const isReadOnly = false;
+```
+
+
+
+## General Coding Preferences
+
+- Prefer async/await over try/catch for async operations. Only use try/catch when you need to handle specific errors or perform cleanup
+- Prefer default exports over named exports when creating a file with a specific name. The default export should match the file name
+
+```typescript
+// In formatDate.ts
+// GOOD
+function formatDate(date: Date): string {
+  /* ... */
+}
+export default formatDate;
+
+// BAD (when file is named formatDate.ts)
+export const formatDate = (date: Date): string => {
+  /* ... */
+};
+```
+
+- Named exports are appropriate when the file contains multiple related utilities or when the file name doesn't directly indicate the specific function:
+
+```ts
+// In dateUtils.ts
+// GOOD - in a file named dateUtils.ts that contains multiple date-related functions
+export const formatDate = (date: Date): string => {
+  /* ... */
+};
+export const parseDate = (dateString: string): Date => {
+  /* ... */
+};
+// GOOD - clear that we're importing a specific function from a utilities file
+import { formatDate } from "./dateUtils";
+
+// Less intuitive - requires knowing what's exported from the file
+import { formatDate } from "./utils";
+```
+
+- Prefer optional chaining if possible over conditional checks when accessing properties or methods:
+
+```ts
+// GOOD
+element?.call();
+
+// BAD
+if (element) {
+  element.call();
+}
+```
+
+- Prefer nullish coalescing operator (??) over logical OR (||) for default values when you specifically want to check for null or undefined:
+
+```ts
+// GOOD - only falls back to empty array when userList is null or undefined
+const users = userList ?? [];
+
+// BAD - falls back to empty array when userList is null, undefined, false, 0, '', etc.
+const users = userList || [];
+```
+
+- Functions especially in React components should be separated by a blank line for better readability:
+
+```tsx
+// GOOD
+const Button = () => {
+  const handleClick = () => {
+    // implementation
+  }
+
+  const handleFocus = () => {
+    // implementation
+  }
+
+  return <button onClick={handleClick} onFocus={handleFocus}>Click me</button>;
+
+// BAD
+const TextField = () => {
+  const handleChange = () => {
+    // implementation
+  }
+  const handleBlur = () => {
+    // implementation
+  }
+
+  return <input onChange={handleChange} onBlur={handleBlur} />;
+}
+```
+
+- When a function explicitly returns undefined, use an explicit return statement:
+
+```ts
+// GOOD - explicitly returns undefined
+function getAge(user: User): number | undefined {
+  return undefined;
+}
+// BAD - implicit undefined return
+function getAge(user: User): number | undefined {
+  return;
+}
+```
+
+- When using if statements, prefer returning early with the simpler case and keeping the longer implementation after the if block to improve readability:
+
+```ts
+// GOOD - early return for simple case
+if (isSimpleCase) {
+  return simpleResult;
+}
+// Longer implementation with multiple steps
+const result = complexCalculation();
+const processedResult = processResult(result);
+return processedResult;
+
+// BAD - longer implementation in if block
+if (isSimpleCase) {
+  // Longer implementation with multiple steps
+  const result = complexCalculation();
+  const processedResult = processResult(result);
+  return processedResult;
+}
+return simpleResult;
+```
+
+- When using if statements with return statements, omit the else block since it's unnecessary:
+
+```ts
+// GOOD - no else needed when if returns
+if (isSimpleCase) {
+  return simpleResult;
+}
+
+return complexResult;
+
+// BAD - unnecessary else block
+if (isSimpleCase) {
+  return simpleResult;
+} else {
+  return complexResult;
+}
+```

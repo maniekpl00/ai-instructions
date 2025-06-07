@@ -1,0 +1,106 @@
+---
+description: 
+globs: **/*.ts, **/*.tsx, **/*.d.ts
+alwaysApply: false
+---
+# TypeScript Best Practices
+
+## Type System
+
+- Use type for unions, intersections, and mapped types
+- Use strict TypeScript configuration
+- Leverage TypeScript's built-in utility types
+- Use generics for reusable type patterns
+- Avoid inline type definitions, create separate type definitions.
+- Create proper type definitions for all variables, parameters and return types.
+- Use type over interface unless you specifically need interface features.
+- Prefer defining types separately rather than inline for better reusability and readability.
+- Prefer type over interface in TypeScript for better consistency.
+- Avoid using `any` type, use `unknown` instead when type is truly unknown.
+- Minimize type casting with 'as', use type guards or proper typing instead.
+- Use const enum instead of regular enum when possible for better performance and tree-shaking.
+- Regular enums should only be used when you need to:
+- - Reverse map enum values to keys
+- - Reference enum values at runtime
+- - Have computed/non-constant enum members
+
+## Naming Conventions
+
+- Use PascalCase for type names and interfaces
+- 
+- Prefix interfaces for React props with 'Props' (e.g., ButtonProps)
+- Enums name should be written in PascalCase, however property should be UPPER_CASE, example:
+
+```ts
+const enum Role {
+  SUPER_ADMIN = "SUPER_ADMIN",
+  USER = "USER",
+  SUPPORT = "SUPPORT",
+}
+```
+
+- Maintain consistent casing in type/interface definitions:
+
+```ts
+// Good - consistent camelCase
+type UserSettings = {
+  isDarkMode: boolean;
+  fontSize: number;
+  language: string;
+};
+
+// Good - consistent PascalCase for API contract
+type UserSettings = {
+  IsDarkMode: boolean;
+  FontSize: number;
+  Language: string;
+};
+
+// Bad - mixed casing
+type userSettings = {
+  isDarkMode: boolean;
+  FontSize: number; // Inconsistent casing
+  language: string;
+  "theme color": string; // Inconsistent casing
+};
+```
+
+## Code Organization
+
+- Keep type definitions close to where they're used
+- Export types and interfaces from dedicated type files when shared
+- Use barrel exports (index.ts) for organizing exports
+- Place shared types in a `types` directory
+- Co-locate component props with their components
+
+## Functions
+
+- Use explicit return types for public functions
+- Use arrow functions for callbacks and methods
+- Implement proper error handling with custom error types
+- Use function overloads for complex type scenarios
+
+## Best Practices
+
+- Enable strict mode in tsconfig.json
+- Use readonly for immutable properties
+- Leverage discriminated unions for type safety
+- Use type guards for runtime type checking
+- Implement proper null checking
+- Avoid type assertions unless necessary
+
+## Error Handling
+
+- Create custom error types for domain-specific errors
+- Use Result types for operations that can fail
+- Implement proper error boundaries
+- Use try-catch blocks with typed catch clauses
+- Handle Promise rejections properly
+
+## Patterns
+
+- Use the Builder pattern for complex object creation
+- Implement the Repository pattern for data access
+- Use the Factory pattern for object creation
+- Leverage dependency injection
+- Use the Module pattern for encapsulation
