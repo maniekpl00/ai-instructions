@@ -139,10 +139,9 @@ const isReadOnly = false;
 ```typescript
 // In formatDate.ts
 // GOOD
-function formatDate(date: Date): string {
+export default function formatDate(date: Date): string {
   /* ... */
 }
-export default formatDate;
 
 // BAD (when file is named formatDate.ts)
 export const formatDate = (date: Date): string => {
@@ -153,7 +152,7 @@ export const formatDate = (date: Date): string => {
 - Named exports are appropriate when the file contains multiple related utilities or when the file name doesn't directly indicate the specific function:
 
 ```ts
-// In dateUtils.ts
+// In dateLibs.ts
 // GOOD - in a file named dateUtils.ts that contains multiple date-related functions
 export const formatDate = (date: Date): string => {
   /* ... */
@@ -162,10 +161,10 @@ export const parseDate = (dateString: string): Date => {
   /* ... */
 };
 // GOOD - clear that we're importing a specific function from a utilities file
-import { formatDate } from "./dateUtils";
+import { formatDate } from "./dateLibs";
 
-// Less intuitive - requires knowing what's exported from the file
-import { formatDate } from "./utils";
+// BAD - Less intuitive - requires knowing what's exported from the file
+import { formatDate } from "./libs";
 ```
 
 - Prefer optional chaining if possible over conditional checks when accessing properties or methods:
@@ -222,11 +221,17 @@ const TextField = () => {
 
 ```ts
 // GOOD - explicitly returns undefined
-function getAge(user: User): number | undefined {
+function getOptionalAge(user: User): number | undefined {
+  if(user.age >= 18) {
+    return user.age;
+  }
   return undefined;
 }
 // BAD - implicit undefined return
-function getAge(user: User): number | undefined {
+function getOptionalAge(user: User): number | undefined {
+  if(user.age >= 18) {
+    return user.age;
+  }
   return;
 }
 ```
