@@ -1,0 +1,23 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+
+# Libraries
+
+## Criteria when choosing libraries
+
+- It must support TypeScript
+- It should be widely supported by community and owners
+- It must be compatible with current version of React
+
+## Example of recommended libraries and framworks
+
+- **tailwind** to handle styling
+- **class-variance-authority** to handle variants of CSS classes, especially in Tailwind
+- **axios** to handle HTTP requests
+- **shadcn** to build component library
+- **next.js** to build full-stack web application
+- **lucide** or **phosphoricons** for icon library package
+- **vitest** and **react-testing-library** for testing

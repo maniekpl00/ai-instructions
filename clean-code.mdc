@@ -94,17 +94,29 @@ const clickButton = () => {
 
 - Boolean variables should be prefixed with is/has/should (e.g. isLoading, shouldUpdate, hasError), except for:
 - - native boolean props like disabled, readonly, etc.
-- - components located in 'app/components/ui/' directory
-- Functions that return boolean values should be prefixed with 'check' followed by is/has/should. Examples:
+- Functions that return boolean values should be prefixed with `check` followed by `is/has/should`. Examples:
 - - checkIsValid() -> CORRECT (returns boolean)
 - - checkHasPermission() -> CORRECT (returns boolean)
 - - checkShouldUpdate() -> CORRECT (returns boolean)
 - - isValid() -> WRONG (missing 'check' prefix)
 - - hasPermission() -> WRONG (missing 'check' prefix)
+- Methods that return boolean values can be prefixed with `is`
 - Non-boolean variables and functions should not have is/has/should prefixes at all. Examples:
 - - userStatus -> CORRECT (instead of isUserStatus)
 - - processData -> CORRECT (instead of isProcessData)
 - - getUser -> CORRECT (instead of isGetUser)
+- Avoid using the same action prefix for different concepts (don't mix for example `add` for create & math operations)
+
+```ts
+// GOOD
+increaseSum();
+addTask();
+
+// BAD
+addToSum();
+addTask();
+```
+
 - Maintain consistent naming patterns across the codebase. Avoid mixing different naming variations for the same concept:
 
 ```ts
@@ -118,8 +130,6 @@ const isEdit = false;
 const isReadonly = true;
 const isReadOnly = false;
 ```
-
-
 
 ## General Coding Preferences
 

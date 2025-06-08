@@ -5,7 +5,7 @@ alwaysApply: false
 ---
 # React v18 Best Practices
 
-## Component Structure
+## General Component Structure
 
 - Use functional components over class components
 - Keep components small and focused
@@ -66,4 +66,71 @@ alwaysApply: false
 - Implement proper mock data
 
 ## Security
+
 - Avoid using `dangerouslySetInnerHTML` or `innerHtml` as it can lead to XSS vulnerabilities.
+
+## Shared Component Structured
+
+The structure is required only for components inside `shared/ui/` directory.
+
+### Create a type utils to handle generic React components in TypeScript
+
+```ts
+type OverridableTypeMap {
+  props: object;
+  defaultComponent: ElementType;
+}
+
+export type TypeMap<Props extends object, RootComponent extends ElementType> = {
+  props: Props;
+  defaultComponent: RootComponent;
+};
+
+export type PolymorphicProps<
+  ComponentTypeMap extends OverridableTypeMap,
+  RootComponent extends ElementType,
+> = ComponentTypeMap['props'] &
+  DistributiveOmit<ComponentPropsWithRef<RootComponent>, keyof ComponentTypeMap['props']> & {
+    component?: RootComponent;
+  };
+
+export type PolymorphicComponent<ComponentTypeMap extends OverridableTypeMap> = {
+  <RootComponent extends ElementType = ComponentTypeMap['defaultComponent']>(
+    props: PolymorphicProps<ComponentTypeMap, RootComponent>
+  ): JSX.Element | null;
+  propTypes?: any;
+  displayName?: string | undefined;
+};
+```
+
+### Example of shared component
+
+```tsx
+// Paper.tsx
+const DEFAULT_TAG = "div";
+
+type PaperVariant = "primary" | "secondary";
+
+type PaperOwn = {
+  variant?: PaperVariant;
+};
+
+type PaperTypeMap = TypeMap<PaperOwnProps, typeof DEFAULT_TAG>;
+
+export type PaperProps<RootComponent extends ElementType = typeof DEFAULT_TAG> =
+  PolymorphicProps<PaperTypeMap, RootComponent>;
+
+const Paper = forwardRef<HTMLDivElement, PaperProps>((props, ref) => {
+  const { component: Component = DEFAULT_TAG, ...rest } = props;
+  // Implementation
+
+  return (
+    <Component
+      {...rest}
+      // Implementation
+    />
+  );
+}) as PolymorphicComponent<PaperTypeMap>;
+
+export default Paper;
+```

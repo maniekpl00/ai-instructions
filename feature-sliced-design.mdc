@@ -90,6 +90,26 @@ features/user-auth/
 │   └── validate-credentials.ts
 ```
 
+## Example Shared Folder Structure
+
+Follow this shared folder structure for React projects. Shared directories must be clean and organised by directories, not files. Export what is needed by `index.ts`, rest of functionality should be encapsulated.
+
+```
+shared
+├── /ui/
+│   └── Button/
+│       └── Button.tsx
+│       └── index.ts
+├── lib/
+│   └── splitArrayAtSize/
+│       └── splitArrayAtSize.ts
+│       └── index.ts
+├── hooks/
+│   └── useDebounce/
+│       └── useDebounce.ts
+│       └── index.ts
+```
+
 ## Do's
 
 - Place reusable buttons in `shared/ui`
